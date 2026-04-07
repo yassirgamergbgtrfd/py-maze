@@ -1,304 +1,86 @@
-# 🎮 MAZE GAME - A Customizable Pygame Project
+# 🕹️ MAZE EXPLORER - Master Edition
 
-> **Working Version** - This is a fully functional game. For a version with intentional bugs for learning, see the `learning-branch`.
+> **Full Version** - This is the complete, playable source code for the Pygame Maze. Use this as a reference to understand how movement, shooting, and collisions work in a real-time game loop.
 
-Welcome to the Maze Game! This is a fully functional, interactive game where you navigate through a maze, collect coins, and avoid enemies. Best of all, **you can customize it!**
-
----
-
-## 📋 Table of Contents
-
-1. [Setup Instructions](#-setup-instructions)
-2. [How to Play](#-how-to-play)
-3. [Game Files](#-game-files)
-4. [Customization Guide](#-customization-guide)
-5. [Troubleshooting](#-troubleshooting)
+This project demonstrates the core pillars of Pygame: **Sprite Groups**, **Event Handling**, **Coordinate Systems**, and **Collision Logic**.
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Getting Started
 
-### Step 1: Install Python (if not already installed)
-
-Make sure you have Python 3.7 or higher installed on your computer.
-
-- Check by opening **Command Prompt** (Windows) and typing:
-  ```
-  python --version
-  ```
-
-### Step 2: Install Pygame
-
-In your **Command Prompt** (or Terminal), navigate to your project folder and run:
-
-```bash
-pip install -r requirements.txt
-```
-
-Or directly:
-
-```bash
-pip install pygame
-```
-
-### Step 3: Run the Game
-
-In **Command Prompt**, type:
-
-```bash
-python main.py
-```
-
-The game window should open! 🎮
+1.  **Requirement**: Ensure you have Python 3.x and Pygame installed.
+    ```bash
+    pip install pygame
+    ```
+2.  **Run**: Execute the script to start the game.
+    ```bash
+    python maze_master.py
+    ```
 
 ---
 
-## 🎮 How to Play
+## 🎮 Controls & Mechanics
 
-### Controls
-
-- **Arrow Keys**: Move up, down, left, right
-- **Close Window**: Exit the game
-
-### Objective
-
-- **Collect Coins**: Move around the maze to collect coins (gold circles)
-- **Avoid Enemies**: Don't get caught by the blue and purple enemies!
-- **Reach the Goal**: Collect all 50 coins to win!
-
-### Game Over Conditions
-
-- **Win**: Collect enough coins (default: 50)
-- **Lose**: Get hit by an enemy 3 times
+| Action | Control | Logic Behind It |
+| :--- | :--- | :--- |
+| **Move** | Arrow Keys | Updates `self.rect` and checks against `walls` group. |
+| **Shoot** | Spacebar | Instantiates a `Bullet` at `player.rect.center`. |
+| **Win** | Reach Green | Checks `spritecollide` between Player and Goal. |
+| **Die** | Hit Red | Resets `player.rect` to its `start_x/y` coordinates. |
 
 ---
 
-## 📁 Game Files
+## 🛠️ The "Developer" Guide (How to Customize)
 
-Each file has a specific purpose:
+Now that the code is functional, you can treat this file as a **Game Engine**. Try the following modifications:
 
-| File | Purpose |
-|------|---------|
-| `main.py` | **START HERE** - The entry point to run the game |
-| `config.py` | Game settings: colors, speeds, maze layout, coin count |
-| `entities.py` | Game objects: Player, Enemy, Coin classes |
-| `game.py` | Main game logic and game loop |
-| `renderer.py` | Drawing and visual effects |
-| `requirements.txt` | Python package dependencies |
+### 1. Advanced Level Editing
+The `level_map` is a grid of strings. You can create massive levels or vertical towers by adding more strings to the list. 
+* **Challenge**: Try to create a "Boss Room" at the end of your maze with 5+ enemies.
 
----
+### 2. Tuning the Physics
+In the `__init__` methods of the classes, you can find the "Balance Variables":
+* `self.speed = 5` (Player): Change this to **10** for a "Sprint Mode."
+* `self.direction = 1` (Enemy): Change the `2` in `self.rect.y += self.direction * 2` to a higher number to make enemies move faster.
 
-## 🎨 Customization Guide
+### 3. Adding a "Lives" System
+Currently, hitting an enemy just teleports you back. 
+* **Logic Change**: Create a variable `self.lives = 3` in the Player class. 
+* Inside the collision check, subtract 1 from `lives`. If `lives == 0`, then call `pygame.quit()`.
 
-### 1. Change Colors
-
-Open `config.py` and find the "COLORS" section. Colors use RGB format (Red, Green, Blue).
-
-**Example:** Change the player color from yellow to red:
-
+### 4. Sprite Graphics
+Instead of solid colors, you can use images. Replace the `Surface` code in any class with:
 ```python
-# Before:
-COLOR_PLAYER = (255, 255, 0)  # Yellow
-
-# After:
-COLOR_PLAYER = (255, 0, 0)    # Red
-```
-
-**RGB Values Cheat Sheet:**
-- Red: `(255, 0, 0)`
-- Green: `(0, 255, 0)`
-- Blue: `(0, 0, 255)`
-- Yellow: `(255, 255, 0)`
-- Purple: `(128, 0, 128)`
-- Orange: `(255, 165, 0)`
-- White: `(255, 255, 255)`
-- Black: `(0, 0, 0)`
-
-### 2. Change Game Speed
-
-In `config.py`, adjust:
-
-```python
-PLAYER_SPEED = 5      # Higher = faster
-ENEMY_SPEED = 3       # Higher = faster
-FPS = 60              # Frames per second
-```
-
-### 3. Design Your Own Maze
-
-In `config.py`, find the `MAZE` variable:
-
-```python
-MAZE = [
-    [1, 1, 1, 1, 1, ...],  # 1 = wall, 0 = empty space
-    [1, 0, 0, 0, 1, ...],
-    ...
-]
-```
-
-- **1** = Wall (white block)
-- **0** = Empty space (walkable)
-
-Try creating a simple test maze:
-
-```python
-MAZE = [
-    [1, 1, 1, 1, 1, 1, 1],
-    [1, 0, 0, 0, 0, 0, 1],
-    [1, 0, 1, 1, 1, 0, 1],
-    [1, 0, 0, 0, 0, 0, 1],
-    [1, 1, 1, 1, 1, 1, 1],
-]
-```
-
-### 4. Change Starting Positions
-
-In `config.py`:
-
-```python
-PLAYER_START_ROW = 1
-PLAYER_START_COL = 1
-
-ENEMY1_START_ROW = 1
-ENEMY1_START_COL = 18
-
-ENEMY2_START_ROW = 13
-ENEMY2_START_COL = 1
-```
-
-### 5. Adjust the Win Condition
-
-In `config.py`:
-
-```python
-COINS_TO_WIN = 50  # Change this to require more or fewer coins
-MAX_HEALTH = 3     # Change how many hits the player can take
-```
-
-### 6. Improve Enemy AI
-
-Open `entities.py` and find the `Enemy.update_position()` method. The current AI is very basic:
-
-```python
-def update_position(self, maze, player):
-    # Current AI just chases player
-    if self.x < player.x:
-        self._try_move(self.speed, 0, maze)
-    ...
-```
-
-**Challenge:** Try making the enemy smarter! Ideas:
-- Move randomly sometimes
-- Choose diagonal moves
-- Patrol in a pattern
-- Use different strategies for different enemies
-
-### 7. Add WASD Controls
-
-In `game.py`, find `handle_input()` and add this:
-
-```python
-elif event.type == pygame.KEYDOWN:
-    # Existing arrow key code...
-    
-    # NEW: Add WASD controls
-    if event.key == pygame.K_w:
-        self.player.set_direction(0, -1)
-    elif event.key == pygame.K_s:
-        self.player.set_direction(0, 1)
-    elif event.key == pygame.K_a:
-        self.player.set_direction(-1, 0)
-    elif event.key == pygame.K_d:
-        self.player.set_direction(1, 0)
-```
-
-### 8. Customize the Game Over Screen
-
-In `renderer.py`, find `draw_game_over_screen()`:
-
-```python
-if won:
-    title_text = self.font_large.render(
-        "YOU WIN!",  # Change this text!
-        True,
-        (0, 255, 0)  # Change this color!
-    )
+# Load the image
+self.image = pygame.image.load("hero.png").convert_alpha()
+# Resize it to fit the tile
+self.image = pygame.transform.scale(self.image, (TILE_SIZE - 10, TILE_SIZE - 10))
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## 🔍 Code Breakdown for Students
 
-### Problem: "Module 'pygame' not found"
-
-**Solution:** Install pygame:
-```bash
-pip install pygame
+### The Sprite Group Logic
+The game uses `pygame.sprite.Group()`. This is like a smart list. Instead of looping through every enemy to see if a bullet hit it, we use:
+```python
+pygame.sprite.groupcollide(bullets, enemies, True, True)
 ```
+This single line handles the math for **every** bullet against **every** enemy and removes them from the game if they touch.
 
-### Problem: Game runs but nothing appears on screen
-
-**Solution:** Try these steps:
-1. Make sure all files are in the same folder
-2. Check that `config.py` is in the same folder as `main.py`
-3. Try running in a different terminal/command prompt
-
-### Problem: "SyntaxError" or "IndentationError"
-
-**Solution:** 
-1. Check that you didn't accidentally break the code while editing
-2. Make sure lines are properly indented (spaces at the start)
-3. Look at the line number VS Code shows you
-
-### Problem: Colors look different than expected
-
-**Solution:** 
-1. RGB values go from 0-255, not 0-100
-2. Try using an RGB picker online: https://www.colorpicker.com/
-3. Remember the format: `(Red, Green, Blue)`
-
-### Problem: Player/Enemy stuck in walls
-
-**Solution:** 
-This shouldn't happen in the working version. Check that all files are properly configured.
+### Coordinate System
+Remember that in Pygame, $(0,0)$ is the **Top-Left** corner. 
+* Increasing `y` moves the sprite **Down**.
+* Increasing `x` moves the sprite **Right**.
 
 ---
 
-## 📚 File Structure Summary
+## 🔧 Troubleshooting & Common Fixes
 
-```
-your-maze-game/
-├── main.py              ← Run this file!
-├── config.py            ← Customize colors, speeds, maze
-├── entities.py          ← Player, Enemy, Coin classes
-├── game.py              ← Game logic
-├── renderer.py          ← Drawing and UI
-└── requirements.txt     ← Python packages to install
-```
+* **Screen is Black?** Ensure `all_sprites.draw(screen)` is being called inside the `while running` loop.
+* **Bullets won't fire?** Check that you added the new bullet to both `all_sprites` (for drawing) and `bullets` (for collision math).
+* **Stuck in Walls?** This usually happens if the `TILE_SIZE` and the `Player.rect` size are too close. Ensure the player is slightly smaller than the tile.
 
 ---
 
-## 💡 Tips for Success
-
-1. **Start small:** Make small changes and test them
-2. **Read the code:** Every file has comments explaining what each part does
-3. **Don't be afraid to break it:** That's how you learn!
-4. **Use print():** Add `print()` statements to debug
-5. **Test frequently:** After each change, run the game
-
----
-
-## 🎯 Next Steps
-
-1. ✅ Get the game running
-2. ✅ Change some colors to make it your own
-3. ✅ Design your own maze
-4. ✅ Add WASD controls
-5. ✅ Improve the enemy AI
-6. ✅ Add new features (power-ups, levels, menus, etc.)
-
----
-
-**Happy coding! 🚀**
-
-Have fun customizing your game and learning Python!
+**Congratulations on completing the Maze! What will you build next?** 🚀

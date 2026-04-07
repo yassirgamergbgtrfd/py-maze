@@ -1,86 +1,111 @@
-# 🕹️ MAZE EXPLORER - Master Edition
+# 🎮 MAZE EXPLORER - Student Edition
 
-> **Full Version** - This is the complete, playable source code for the Pygame Maze. Use this as a reference to understand how movement, shooting, and collisions work in a real-time game loop.
+> **Educational Project** - This is a "80% complete" game. The core engine is ready, but the player movement, shooting logic, and collision detection are left for **you** to build!
 
-This project demonstrates the core pillars of Pygame: **Sprite Groups**, **Event Handling**, **Coordinate Systems**, and **Collision Logic**.
-
----
-
-## 🚀 Getting Started
-
-1.  **Requirement**: Ensure you have Python 3.x and Pygame installed.
-    ```bash
-    pip install pygame
-    ```
-2.  **Run**: Execute the script to start the game.
-    ```bash
-    python maze_master.py
-    ```
+Welcome to the Maze Explorer! This project is designed to help you bridge the gap between "filling in the gaps" and building your own software. You have the skeleton—now give it a brain.
 
 ---
 
-## 🎮 Controls & Mechanics
+## 📋 Table of Contents
 
-| Action | Control | Logic Behind It |
-| :--- | :--- | :--- |
-| **Move** | Arrow Keys | Updates `self.rect` and checks against `walls` group. |
-| **Shoot** | Spacebar | Instantiates a `Bullet` at `player.rect.center`. |
-| **Win** | Reach Green | Checks `spritecollide` between Player and Goal. |
-| **Die** | Hit Red | Resets `player.rect` to its `start_x/y` coordinates. |
+1. [Setup Instructions](#-setup-instructions)
+2. [Your Mission (The TODOs)](#-your-mission-the-todos)
+3. [The Level Designer](#-the-level-designer)
+4. [Customization Guide](#-customization-guide)
+5. [Troubleshooting](#-troubleshooting)
 
 ---
 
-## 🛠️ The "Developer" Guide (How to Customize)
+## 🚀 Setup Instructions
 
-Now that the code is functional, you can treat this file as a **Game Engine**. Try the following modifications:
+### Step 1: Install Pygame
+Open your **Terminal** or **Command Prompt** and run:
+```bash
+pip install pygame
+```
 
-### 1. Advanced Level Editing
-The `level_map` is a grid of strings. You can create massive levels or vertical towers by adding more strings to the list. 
-* **Challenge**: Try to create a "Boss Room" at the end of your maze with 5+ enemies.
+### Step 2: Run the Game
+Open the `maze_game.py` file in your editor and run it. 
+*Note: The game will open, but you won't be able to move yet! That's your first task.*
 
-### 2. Tuning the Physics
-In the `__init__` methods of the classes, you can find the "Balance Variables":
-* `self.speed = 5` (Player): Change this to **10** for a "Sprint Mode."
-* `self.direction = 1` (Enemy): Change the `2` in `self.rect.y += self.direction * 2` to a higher number to make enemies move faster.
+---
 
-### 3. Adding a "Lives" System
-Currently, hitting an enemy just teleports you back. 
-* **Logic Change**: Create a variable `self.lives = 3` in the Player class. 
-* Inside the collision check, subtract 1 from `lives`. If `lives == 0`, then call `pygame.quit()`.
+## 🛠 Your Mission (The TODOs)
 
-### 4. Sprite Graphics
-Instead of solid colors, you can use images. Replace the `Surface` code in any class with:
+Open `maze_game.py` and search for the `STUDENT TODO` comments. You must complete these 5 challenges:
+
+1.  **TODO 1: Player Movement** - Use `pygame.key.get_pressed()` to make the blue square move.
+2.  **TODO 2: Shooting** - Create a new `Bullet` instance when the **Spacebar** is pressed.
+3.  **TODO 3: Bullet Collisions** - Make the enemies disappear when they get hit by a bullet.
+4.  **TODO 4: Player Damage** - If an enemy touches you, teleport back to the start!
+5.  **TODO 5: Win Condition** - Detect when the player reaches the green goal.
+
+---
+
+## 🗺 The Level Designer
+
+You can change the entire layout of the game without writing complex code! Find the `level_map` list:
+
+- **"W"** = Wall (White)
+- **"P"** = Player Starting Position
+- **"E"** = Enemy (Red)
+- **"G"** = Goal (Green)
+- **" "** = Empty space (Walkable)
+
+**Example Custom Maze:**
 ```python
-# Load the image
-self.image = pygame.image.load("hero.png").convert_alpha()
-# Resize it to fit the tile
-self.image = pygame.transform.scale(self.image, (TILE_SIZE - 10, TILE_SIZE - 10))
+level_map = [
+    "WWWWWWWWWW",
+    "WP      EW",
+    "W  WWWW  W",
+    "W  E    GW",
+    "WWWWWWWWWW",
+]
 ```
 
 ---
 
-## 🔍 Code Breakdown for Students
+## 🎨 Customization Guide
 
-### The Sprite Group Logic
-The game uses `pygame.sprite.Group()`. This is like a smart list. Instead of looping through every enemy to see if a bullet hit it, we use:
+### 1. Change Colors
+Look at the top of the file under the `COLORS` section. Try changing the RGB values:
+- **Red:** `(255, 0, 0)`
+- **Green:** `(0, 255, 0)`
+- **Gold:** `(255, 215, 0)`
+
+### 2. Adjust Difficulty
+Inside the `Player`, `Enemy`, or `Bullet` classes, look for `self.speed`.
+- Increase `self.speed` in the `Enemy` class to make the game harder.
+- Decrease `self.speed` in the `Bullet` class to make shooting a challenge.
+
+### 3. Graphics (Pro Challenge)
+Instead of `self.image.fill(COLOR)`, try loading an actual image:
 ```python
-pygame.sprite.groupcollide(bullets, enemies, True, True)
+self.image = pygame.image.load("my_character.png")
+self.image = pygame.transform.scale(self.image, (TILE_SIZE, TILE_SIZE))
 ```
-This single line handles the math for **every** bullet against **every** enemy and removes them from the game if they touch.
-
-### Coordinate System
-Remember that in Pygame, $(0,0)$ is the **Top-Left** corner. 
-* Increasing `y` moves the sprite **Down**.
-* Increasing `x` moves the sprite **Right**.
 
 ---
 
-## 🔧 Troubleshooting & Common Fixes
+## 🔧 Troubleshooting
 
-* **Screen is Black?** Ensure `all_sprites.draw(screen)` is being called inside the `while running` loop.
-* **Bullets won't fire?** Check that you added the new bullet to both `all_sprites` (for drawing) and `bullets` (for collision math).
-* **Stuck in Walls?** This usually happens if the `TILE_SIZE` and the `Player.rect` size are too close. Ensure the player is slightly smaller than the tile.
+### "The player goes through walls!"
+Check **TODO 1**. Ensure you are using the provided `old_x` and `old_y` logic. If the player moves into a wall, the code should "undo" that move.
+
+### "I press Space but no bullets appear."
+Did you remember to add the bullet to `all_sprites`?
+```python
+all_sprites.add(new_bullet)
+bullets.add(new_bullet)
+```
+If it's not in `all_sprites`, Pygame won't know it needs to be drawn on the screen!
+
+### "The game crashes on start."
+Check your `level_map`. Ensure every row has the same number of characters and that you have at least one **"P"** (Player) on the map.
 
 ---
 
-**Congratulations on completing the Maze! What will you build next?** 🚀
+## 🎯 Final Goal
+Once you have finished all the TODOs, try to beat your own maze. If it's too easy, add more enemies (**E**) or make the paths narrower!
+
+**Happy coding! 🚀**

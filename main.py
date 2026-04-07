@@ -11,7 +11,7 @@ WIDTH, HEIGHT = 800, 600
 TILE_SIZE = 40
 FPS = 60
 
-# Colors
+# Colors (Students can change these!)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 BLUE = (0, 0, 255)
@@ -20,7 +20,7 @@ GREEN = (0, 255, 0)
 YELLOW = (255, 255, 0)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Maze Explorer - Teacher Master Copy")
+pygame.display.set_caption("Maze Explorer - Student Edition")
 clock = pygame.time.Clock()
 
 # ==========================================
@@ -29,6 +29,7 @@ clock = pygame.time.Clock()
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
+        # To use an image later: self.image = pygame.image.load("player.png")
         self.image = pygame.Surface((TILE_SIZE - 10, TILE_SIZE - 10))
         self.image.fill(BLUE)
         self.rect = self.image.get_rect()
@@ -40,7 +41,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.y = self.start_y
 
         self.speed = 5
-        self.facing = "RIGHT"
+        self.facing = "RIGHT" # Helps bullets know which way to go
 
     def update(self, walls):
         # Save old position in case we hit a wall
@@ -49,21 +50,19 @@ class Player(pygame.sprite.Sprite):
 
         keys = pygame.key.get_pressed()
 
-        # --- COMPLETED TODO 1: PLAYER MOVEMENT ---
-        if keys[pygame.K_LEFT]:
-            self.rect.x -= self.speed
-            self.facing = "LEFT"
-        if keys[pygame.K_RIGHT]:
-            self.rect.x += self.speed
-            self.facing = "RIGHT"
-        if keys[pygame.K_UP]:
-            self.rect.y -= self.speed
-            self.facing = "UP"
-        if keys[pygame.K_DOWN]:
-            self.rect.y += self.speed
-            self.facing = "DOWN"
+        # ==========================================
+        # STUDENT TODO 1: PLAYER MOVEMENT
+        # ==========================================
+        # Hint: If the left arrow key is pressed (pygame.K_LEFT),
+        # decrease self.rect.x by self.speed and set self.facing to "LEFT".
+        # Do the same for RIGHT, UP, and DOWN!
 
-        # --- Wall Collision Logic ---
+        # [WRITE YOUR MOVEMENT CODE HERE]
+
+
+
+        # --- Wall Collision Logic (Provided so you don't get stuck!) ---
+        # If the player hits a wall after moving, we push them back to their old position.
         for wall in walls:
             if self.rect.colliderect(wall.rect):
                 self.rect.x = old_x
@@ -132,7 +131,7 @@ class Bullet(pygame.sprite.Sprite):
             self.kill()
 
 # ==========================================
-# 3. LEVEL DESIGN
+# 3. LEVEL DESIGN (Highly Customizable)
 # ==========================================
 # W = Wall, P = Player Start, E = Enemy, G = Goal, Space = Empty
 level_map = [
@@ -190,11 +189,15 @@ while running:
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                # --- COMPLETED TODO 2: SHOOTING ---
-                # Instantiate the bullet and add to groups
-                new_bullet = Bullet(player.rect.centerx, player.rect.centery, player.facing)
-                all_sprites.add(new_bullet)
-                bullets.add(new_bullet)
+                # ==========================================
+                # STUDENT TODO 2: SHOOTING
+                # ==========================================
+                # When SPACE is pressed, create a Bullet object.
+                # Pass it the player's center x, center y, and facing direction.
+                # Add the new bullet to 'all_sprites' and 'bullets' groups.
+
+                # [WRITE YOUR SHOOTING CODE HERE]
+                pass
 
     # --- Updates ---
     # Update player (passing walls for collision check)
@@ -204,25 +207,30 @@ while running:
     enemies.update()
     bullets.update()
 
-    # --- COMPLETED TODO 3: BULLET VS ENEMY COLLISION ---
-    # True, True means both the bullet and the enemy are killed upon collision
-    pygame.sprite.groupcollide(bullets, enemies, True, True)
+    # ==========================================
+    # STUDENT TODO 3: BULLET VS ENEMY COLLISION
+    # ==========================================
+    # Hint: Use pygame.sprite.groupcollide(group1, group2, dokill1, dokill2)
+    # If a bullet hits an enemy, BOTH should disappear (dokill=True).
+
+    # [WRITE YOUR BULLET COLLISION CODE HERE]
 
 
-    # --- COMPLETED TODO 4: PLAYER VS ENEMY COLLISION ---
-    # False means the enemy doesn't die when it hits the player
-    if pygame.sprite.spritecollide(player, enemies, False):
-        # Teleport player back to start
-        player.rect.x = player.start_x
-        player.rect.y = player.start_y
+    # ==========================================
+    # STUDENT TODO 4: PLAYER VS ENEMY COLLISION
+    # ==========================================
+    # Hint: Use pygame.sprite.spritecollide(sprite, group, dokill)
+    # If the player hits an enemy, teleport the player back to player.start_x and player.start_y.
+
+    # [WRITE YOUR ENEMY COLLISION CODE HERE]
 
 
-    # --- COMPLETED TODO 5: WIN CONDITION (PLAYER VS GOAL) ---
-    if pygame.sprite.spritecollide(player, goals, False):
-        print("\n====================")
-        print("    YOU WIN!        ")
-        print("====================\n")
-        running = False
+    # ==========================================
+    # STUDENT TODO 5: WIN CONDITION (PLAYER VS GOAL)
+    # ==========================================
+    # If the player collides with the goal, print "YOU WIN!" to the console and set running = False
+
+    # [WRITE YOUR WIN CONDITION CODE HERE]
 
 
     # --- Drawing ---
